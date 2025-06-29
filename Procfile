@@ -1,2 +1,1 @@
-web: gunicorn koperasi_api.wsgi --log-file - 
-web: python manage.py migrate && gunicorn koperasi_api.wsgi
+web: gunicorn koperasi_api.wsgi --log-file - --workers 4 --bind 0.0.0.0:$PORT

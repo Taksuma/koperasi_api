@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'members',       
     'deposits',   
     'loans',      
-    'gunicorn', # Tambahkan gunicorn di sini
 ]
 
 MIDDLEWARE = [

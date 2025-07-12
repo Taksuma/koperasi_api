@@ -31,8 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'members',       
     'deposits',   
-    'loans',
-    'corsheaders',     
+    'loans',     
 ]
 
 # ... kode sebelumnya ...
@@ -85,7 +84,6 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -121,18 +119,16 @@ WSGI_APPLICATION = 'koperasi_api.wsgi.application'
 import os
 import dj_database_url
 
-if 'RAILWAY_ENVIRONMENT' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
+# Use the DATABASE_URL environment variable for production
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=False)
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -176,4 +172,3 @@ STATICFILES_DIRS = [
 CSRF_TRUSTED_ORIGINS= ["http://127.0.0.1:8000"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CORS_ALLOW_ALL_ORIGINS = True

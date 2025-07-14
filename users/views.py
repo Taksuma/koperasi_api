@@ -4,5 +4,8 @@ from .models import User
 from .serializers import UserSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    """
+    API endpoint yang memungkinkan pengguna untuk dilihat atau diedit.
+    """
+    queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer

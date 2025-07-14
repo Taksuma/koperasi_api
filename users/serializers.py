@@ -3,27 +3,30 @@ from rest_framework import serializers
 from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
+    # Field konfirmasi password, tidak akan disimpan di database (write_only=True)
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'password2', 'role']
+        # Field yang akan diproses saat registrasi
+        fields = ['username', 'password', 'password2']
         extra_kwargs = {
+            # Pastikan password tidak pernah dikirim kembali ke client
             'password': {'write_only': True}
         }
 
+    # Fungsi ini dipanggil untuk validasi data
     def validate(self, attrs):
+        # Cek apakah password dan konfirmasi password sama
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError({"password": "Password tidak cocok."})
         return attrs
 
+    # Fungsi ini dipanggil saat user baru dibuat
     def create(self, validated_data):
-        # Hapus password2 dari data sebelum membuat user
-        validated_data.pop('password2')
-        
+        # Gunakan create_user untuk memastikan password di-hash (enkripsi)
         user = User.objects.create_user(
             username=validated_data['username'],
-            password=validated_data['password'],
-            role=validated_data.get('role', 'member')
+            password=validated_data['password']
         )
         return user

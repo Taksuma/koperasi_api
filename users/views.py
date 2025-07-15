@@ -1,11 +1,15 @@
-# users/views.py
+# File: users/views.py (KODE PERBAIKAN)
+
 from rest_framework import viewsets
 from .models import User
-from .serializers import UserSerializer
+# Impor serializer yang sudah diperbaiki
+from .serializers import UserRegistrationSerializer 
 
 class UserViewSet(viewsets.ModelViewSet):
     """
-    API endpoint yang memungkinkan pengguna untuk dilihat atau diedit.
+    Endpoint untuk registrasi pengguna baru. Hanya mendukung method POST (create).
     """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    serializer_class = UserRegistrationSerializer
+    # Batasi agar endpoint ini hanya bisa untuk membuat user (POST)
+    http_method_names = ['post']
